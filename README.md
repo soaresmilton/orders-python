@@ -1,2 +1,60 @@
-# orders-python
-Api de pedidos com Flask e MySql
+# Orders API
+Objetivo: praticar construção de APIs e boas práticas de desenvolvimento em Flask e MySQLAlchemy.
+
+Desafio proposto: 
+
+- [ ] Construir um **sistema de pedidos** em Python aplicando Programação Orientada a Objetos.
+- [ ] Manter um **núcleo de domínio puro**, independente de frameworks, banco de dados e detalhes de infraestrutura.
+- [ ] Implementar a entidade de domínio **Order** que:
+  - [ ] contenha uma lista de itens
+  - [ ] possua status (`CREATED`, `PAID`, `CANCELLED`)
+  - [ ] calcule o valor total do pedido
+  - [ ] impeça alterações após o pagamento
+- [ ] Implementar a entidade de domínio **OrderItem** que:
+  - [ ] contenha nome, preço unitário e quantidade
+  - [ ] calcule seu próprio subtotal
+- [ ] Definir a abstração **PaymentMethod** usando classes abstratas (`abc`).
+- [ ] Implementar métodos concretos de pagamento:
+  - [ ] **CreditCardPayment**
+  - [ ] **PixPayment**
+- [ ] Criar um **PaymentService** que:
+  - [ ] processe pagamentos por meio de abstrações
+  - [ ] não conheça implementações concretas
+- [ ] Definir a abstração **Notifier** para envio de notificações.
+- [ ] Implementar notificadores concretos:
+  - [ ] **EmailNotifier**
+  - [ ] **SMSNotifier**
+  - [ ] (opcional) notificador composto para múltiplos canais
+- [ ] Criar um **OrderService** que:
+  - [ ] orquestre o fluxo de checkout
+  - [ ] atualize o status do pedido
+  - [ ] dispare notificações
+  - [ ] não instancie dependências diretamente
+- [ ] Definir a abstração **OrderRepository** para persistência.
+- [ ] Implementar um **OrderRepository com MySQL** usando Flask-SQLAlchemy.
+- [ ] Garantir que o domínio dependa apenas de **abstrações**, não de Flask nem de MySQL.
+- [ ] Criar uma **API REST com Flask** que:
+  - [ ] exponha endpoints para criar e consultar pedidos
+  - [ ] converta HTTP/JSON em objetos de domínio
+  - [ ] não contenha regras de negócio
+- [ ] Organizar o projeto em camadas claras:
+  - [ ] domínio
+  - [ ] serviços
+  - [ ] repositórios
+  - [ ] camada HTTP (Flask)
+- [ ] Aplicar corretamente os princípios:
+  - [ ] SRP
+  - [ ] OCP
+  - [ ] LSP
+  - [ ] ISP
+  - [ ] DIP
+- [ ] Utilizar **composição em vez de condicionais** para variação de comportamento.
+- [ ] Encapsular atributos e métodos internos adequadamente.
+- [ ] Permitir extensão futura (novos pagamentos, notificadores ou bancos de dados) **sem modificar código existente**.
+- [ ] Implementar um **fluxo completo**:
+  - [ ] criação do pedido
+  - [ ] adição de itens
+  - [ ] persistência no MySQL
+  - [ ] processamento de pagamento
+  - [ ] atualização de status
+  - [ ] envio de múltiplas notificações via API
