@@ -27,8 +27,7 @@ class ProductController:
     response = self.__format_response(validated_product)
     
     return {
-      "products": response,
-      "total": len(response)
+      "product": response
     }
   
 
@@ -39,7 +38,10 @@ class ProductController:
     if not products:
       raise HttpNotFound("produto não encontrado")
     
-    return formated_product_list
+    return {
+      "products": formated_product_list,
+      "total": len(formated_product_list)
+    } 
 
   def update_product(self, request: FlaskRequest, product_id: int) -> Dict: # type: ignore
     body = request.json

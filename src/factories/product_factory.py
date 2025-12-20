@@ -4,5 +4,3 @@ def product_factory() -> ProductController:
   product = ProductController()
 
   return product
-
-
