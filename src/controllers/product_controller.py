@@ -5,7 +5,6 @@ from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError
 from src.errors.http_not_found import HttpNotFound
 from src.repositories.product_repository import ProductRepository
 
-
 class ProductController:
   def __init__(self, repository: ProductRepository):
     self._repository = repository
