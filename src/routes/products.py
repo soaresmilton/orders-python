@@ -18,9 +18,10 @@ def get_product(product_id: int):
 @products_bp.route('/products', methods=['POST']) # type: ignore
 def create_product():
   try:
+    body = request.json
     product_controller = product_factory()
-    created_product = product_controller.create_product(request)
-    return jsonify(created_product)
+    created_product = product_controller.create_product(body)
+    return jsonify(created_product), 201
   except Exception as exception:
     error_response  = handle_errors(exception)
     return jsonify(error_response["body"]), error_response["status_code"]
@@ -39,8 +40,9 @@ def get_products():
 @products_bp.route('/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
   try:
+    body = request.json
     product_controller = product_factory()
-    response = product_controller.response(request=request, product_id=product_id)
+    response = product_controller.update_product(body=body, product_id=product_id)
     return jsonify(response)
   except Exception as exception:
     error_response = handle_errors(exception)

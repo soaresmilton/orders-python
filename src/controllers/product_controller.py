@@ -1,82 +1,65 @@
 from typing import Dict, List
-from flask import request as FlaskRequest
-from src.database.database import db
 from src.models.entities.products import Product
 from src.errors.http_bad_request import HttpBadRequestError
 from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError
 from src.errors.http_not_found import HttpNotFound
+from src.repositories.product_repository import ProductRepository
+
 
 class ProductController:
-  def create_product(self, request: FlaskRequest) -> Dict: # type: ignore
-    body = request.json
+  def __init__(self, repository: ProductRepository):
+    self._repository = repository
+
+  def create_product(self, body: Dict) -> Dict: # type: ignore
     validated_body = self.__validate_product_creation_request_data(body=body)
 
-    product_name = validated_body.get('name')
-    product_description = validated_body.get('description')
-    product_price = validated_body.get('item_price') 
-    product = Product(name=product_name, description=product_description, item_price=product_price)
-    db.session.add(product)
-    db.session.commit()
+    product = Product(
+      name=validated_body['name'], 
+      description=validated_body['description'], 
+      item_price=validated_body['item_price']
+      )
 
-    response = self.__format_response(product) 
+    saved_product = self._repository.save(product)
+   
+    response = self.__format_response(saved_product) 
     return response
 
 
   def get_product(self, product_id: int) -> Dict:
-    validated_product = self.__validate_if_product_exists(product_id)
-    response = self.__format_response(validated_product)
+    validated_product = self._repository.get_by_id(product_id)
+    response = validated_product.to_dict()
     
     return {
       "product": response
     }
   
 
-  def get_products(self) -> List[Product]:
-    products = Product.query.all()
-    formated_product_list = [self.__format_response(product) for product in products]
-
-    if not products:
-      raise HttpNotFound("produto não encontrado")
+  def get_products(self) -> Dict:
+    products = self._repository.get_all()
+    formated_product_list = [product.to_dict() for product in products]
     
     return {
       "products": formated_product_list,
       "total": len(formated_product_list)
     } 
 
-  def update_product(self, request: FlaskRequest, product_id: int) -> Dict: # type: ignore
-    body = request.json
+  def update_product(self, body: Dict, product_id: int) -> Dict: # type: ignore
     validated_body = self.__validate_product_creation_request_data(body=body)
-    product = self.__validate_if_product_exists(product_id)
-    
-    product.name = validated_body.get('name')
-    product.description = validated_body.get('description')
-    product.item_price = validated_body.get('item_price')
 
-    db.session.commit()
-    return {"message": "produto atualizado com sucesso"}
+    response = self._repository.update(product_id=product_id, validated_body=validated_body)
+    return response
+    
     
   def delete_product(self, product_id: int) -> Dict:
-    product_to_be_deleted = self.__validate_if_product_exists(product_id)
-    db.session.delete(product_to_be_deleted)
-    db.session.commit()
+    product_to_be_deleted = self._repository.get_by_id(product_id)
+
+    self._repository.delete(product_to_be_deleted)
+
     return {"message": "produto deletado com sucesso"}
     
-  def __validate_if_product_exists(self, product_id: int) -> Product:
-    product = Product.query.get(product_id)
-    if not product:
-      raise HttpNotFound("produto não encontrado")
-    
-    return product
-  
 
   def __validate_product_creation_request_data(self, body: Dict) -> Dict:
     if "name" not in body or "description" not in body or "item_price" not in body:
       raise HttpUnprocessableEntityError("body mal formatado")
     validated_body = body
     return validated_body
-
-  def __format_response(self, product: Product) -> Dict:
-    return product.to_dict()
-
-
-

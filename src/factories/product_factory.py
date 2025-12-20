@@ -1,6 +1,6 @@
 from src.controllers.product_controller import ProductController
+from src.repositories.product_repository import ProductRepository
 
 def product_factory() -> ProductController:
-  product = ProductController()
-
-  return product
+  repository = ProductRepository()
+  return ProductController(repository)
