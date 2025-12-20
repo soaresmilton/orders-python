@@ -23,13 +23,13 @@ class ProductController:
 
 
   def get_product(self, product_id: int) -> Dict:
-    product = Product.query.get(product_id)
-    if not product:
-      raise HttpNotFound("produto não encontrado")
+    validated_product = self.__validate_if_product_exists(product_id)
+    response = self.__format_response(validated_product)
     
-    response = self.__format_response(product)
-    
-    return response
+    return {
+      "products": response,
+      "total": len(response)
+    }
   
 
   def get_products(self) -> List[Product]:
@@ -40,6 +40,26 @@ class ProductController:
       raise HttpNotFound("produto não encontrado")
     
     return formated_product_list
+
+  def update_product(self, request: FlaskRequest, product_id: int) -> Dict: # type: ignore
+    body = request.json
+    validated_body = self.__validate_product_creation_request_data(body=body)
+    product = self.__validate_if_product_exists(product_id)
+    
+    product.name = validated_body.get('name')
+    product.description = validated_body.get('description')
+    product.item_price = validated_body.get('item_price')
+
+    db.session.commit()
+    return {"message": "produto atualizado com sucesso"}
+    
+    
+  def __validate_if_product_exists(self, product_id: int) -> Product:
+    product = Product.query.get(product_id)
+    if not product:
+      raise HttpNotFound("produto não encontrado")
+    
+    return product
   
 
   def __validate_product_creation_request_data(self, body: Dict) -> Dict:

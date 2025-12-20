@@ -36,4 +36,15 @@ def get_products():
     return jsonify(error_response["body"]), error_response["status_code"]
 
 
+@products_bp.route('/products/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+  try:
+    product_controller = product_factory()
+    update_product = product_controller.update_product(request=request, product_id=product_id)
+    return jsonify(update_product)
+  except Exception as exception:
+    error_response = handle_errors(exception)
+    return jsonify(error_response["body"]), error_response["status_code"]
+
+
   
