@@ -25,7 +25,7 @@ class ProductRepository:
 
     return products
   
-  def update(self, product_id: int, validated_body: Dict) -> Dict:
+  def update(self, product_id: int, validated_body: Dict) -> None:
     
     product = self.get_by_id(product_id)
     
@@ -34,9 +34,6 @@ class ProductRepository:
     product.item_price = validated_body.get('item_price')
 
     db.session.commit()
-
-    return {"message": "produto atualizado com sucesso"}
-  
 
   def delete(self, product: Product) -> None:
     db.session.delete(product)

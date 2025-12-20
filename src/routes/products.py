@@ -10,7 +10,7 @@ def get_product(product_id: int):
   try:
     product_controller = product_factory()
     product = product_controller.get_product(product_id)
-    return product
+    return jsonify(product)
   except Exception as exception:
     error_response = handle_errors(exception)
     return jsonify(error_response["body"]), error_response["status_code"]

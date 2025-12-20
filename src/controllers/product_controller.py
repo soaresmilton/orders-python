@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 from src.models.entities.products import Product
 from src.errors.http_bad_request import HttpBadRequestError
 from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError
@@ -46,9 +46,8 @@ class ProductController:
   def update_product(self, body: Dict, product_id: int) -> Dict: # type: ignore
     validated_body = self.__validate_product_creation_request_data(body=body)
 
-    response = self._repository.update(product_id=product_id, validated_body=validated_body)
-    return response
-    
+    self._repository.update(product_id=product_id, validated_body=validated_body)
+    return {"message": "produto atualizado com sucesso"}
     
   def delete_product(self, product_id: int) -> Dict:
     product_to_be_deleted = self._repository.get_by_id(product_id)
