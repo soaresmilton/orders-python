@@ -7,17 +7,24 @@ products_bp = Blueprint('products_routes', __name__)
 
 @products_bp.route('/products/<int:product_id>', methods=['GET'])
 def get_product(product_id: int):
-  pass
-
+  try:
+    product_controller = product_factory()
+    product = product_controller.get_product(product_id)
+    return product
+  except Exception as exception:
+    error_response = handle_errors(exception)
+    return jsonify(error_response["body"]), error_response["status_code"]
 
 @products_bp.route('/products', methods=['POST']) # type: ignore
 def create_product():
   try:
-    product = product_factory()
-    created_product = product.create_product(request)
+    product_controller = product_factory()
+    created_product = product_controller.create_product(request)
     return jsonify(created_product)
   except Exception as exception:
     error_response  = handle_errors(exception)
     return jsonify(error_response["body"]), error_response["status_code"]
+  
+
 
   
