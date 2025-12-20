@@ -40,8 +40,19 @@ def get_products():
 def update_product(product_id):
   try:
     product_controller = product_factory()
-    update_product = product_controller.update_product(request=request, product_id=product_id)
-    return jsonify(update_product)
+    response = product_controller.response(request=request, product_id=product_id)
+    return jsonify(response)
+  except Exception as exception:
+    error_response = handle_errors(exception)
+    return jsonify(error_response["body"]), error_response["status_code"]
+  
+@products_bp.route('/products/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+  try:
+    product_controller = product_factory()
+    response = product_controller.delete_product(product_id)
+    return jsonify(response)
+  
   except Exception as exception:
     error_response = handle_errors(exception)
     return jsonify(error_response["body"]), error_response["status_code"]

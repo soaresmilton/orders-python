@@ -53,6 +53,11 @@ class ProductController:
     db.session.commit()
     return {"message": "produto atualizado com sucesso"}
     
+  def delete_product(self, product_id: int) -> Dict:
+    product_to_be_deleted = self.__validate_if_product_exists(product_id)
+    db.session.delete(product_to_be_deleted)
+    db.session.commit()
+    return {"message": "produto deletado com sucesso"}
     
   def __validate_if_product_exists(self, product_id: int) -> Product:
     product = Product.query.get(product_id)
