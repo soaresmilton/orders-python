@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from flask import request as FlaskRequest
 from src.database.database import db
 from src.models.entities.products import Product
@@ -32,6 +32,16 @@ class ProductController:
     return response
   
 
+  def get_products(self) -> List[Product]:
+    products = Product.query.all()
+    formated_product_list = [self.__format_response(product) for product in products]
+
+    if not products:
+      raise HttpNotFound("produto não encontrado")
+    
+    return formated_product_list
+  
+
   def __validate_product_creation_request_data(self, body: Dict) -> Dict:
     if "name" not in body or "description" not in body or "item_price" not in body:
       raise HttpUnprocessableEntityError("body mal formatado")
@@ -39,13 +49,7 @@ class ProductController:
     return validated_body
 
   def __format_response(self, product: Product) -> Dict:
-    return {
-      "product": {
-        "name": product.name,
-        "description": product.description,
-        "item_price": product.item_price
-      }
-    }
+    return product.to_dict()
 
 
 

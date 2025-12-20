@@ -24,7 +24,16 @@ def create_product():
   except Exception as exception:
     error_response  = handle_errors(exception)
     return jsonify(error_response["body"]), error_response["status_code"]
-  
+
+@products_bp.route('/products', methods=['GET']) # type: ignore
+def get_products():
+  try:
+    product_controller = product_factory()
+    products_list = product_controller.get_products()
+    return jsonify(products_list)
+  except Exception as exception:
+    error_response = handle_errors(exception)
+    return jsonify(error_response["body"]), error_response["status_code"]
 
 
   
