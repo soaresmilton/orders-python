@@ -20,7 +20,7 @@ class ProductController:
 
     saved_product = self._repository.save(product)
    
-    response = self.__format_response(saved_product) 
+    response = saved_product.to_dict()
     return response
 
 

@@ -1,5 +1,4 @@
 from flask import request, jsonify, Blueprint
-from src.models.entities.products import Product
 from src.factories.product_factory import product_factory
 from src.errors.error_controller import handle_errors
 
