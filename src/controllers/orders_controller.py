@@ -21,7 +21,6 @@ class OrdersController:
       "order": response
     }
   
-
   def get_orders(self) -> Dict:
     orders = self._repository.get_all()
     formated_orders_list = [order.to_dict() for order in orders]
@@ -36,6 +35,12 @@ class OrdersController:
 
     self._repository.update(order_id, validated_body)
     return {"message": "pedido atualizado com sucesso."}
+  
+  def delete_order(self, order_id: int) -> Dict:
+    order = self._repository.get_by_id(order_id)
+    self._repository.delete(order)
+
+    return {"message": "pedido deletado com sucesso"}
 
   def __validate_order_request_data(self, body: Dict) -> Dict:
     if "status" not in body:

@@ -47,3 +47,14 @@ def update_order(order_id):
   except Exception as exception:
     error_response = handle_errors(exception)
     return jsonify(error_response["body"]), error_response["status_code"]
+  
+@orders_bp.route('/orders/<int:order_id>', methods=['DELETE'])
+def delete_order(order_id):
+  try:
+    order_controller = order_factory()
+    response = order_controller.delete_order(order_id)
+    return jsonify(response)
+  except Exception as exception:
+    error_response = handle_errors(exception)
+    return jsonify(error_response["body"]), error_response["status_code"]
+  

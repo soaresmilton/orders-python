@@ -32,3 +32,8 @@ class OrdersRepository:
     order.status = validated_body.get('status')
 
     db.session.commit()
+
+
+  def delete(self, order: Order) -> None:
+    db.session.delete(order)
+    db.session.commit()
