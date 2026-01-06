@@ -1,6 +1,7 @@
 from flask import Flask
 from src.routes.order import orders_bp
 from src.routes.products import products_bp
+from src.routes.order_items import order_items_bp
 from src.database.database import db
 
 def create_app():
@@ -12,6 +13,6 @@ def create_app():
 
   app.register_blueprint(orders_bp)
   app.register_blueprint(products_bp)
-
+  app.register_blueprint(order_items_bp)
 
   return app
